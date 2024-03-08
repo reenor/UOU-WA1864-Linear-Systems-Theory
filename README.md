@@ -1,4 +1,4 @@
-# Linear System Theory (Core Subject)
+# Linear Systems Theory (Core Subject)
 ## Professor in charge
 - Prof. Kim, Sung Hyun
 ## Course time
