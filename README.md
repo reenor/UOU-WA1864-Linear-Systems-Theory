@@ -1,2 +1,7 @@
-# UOU-WA1864-Linear-System-Theory
-Linear System Theory
+# Linear System Theory (Core Subject)
+## Professor in charge
+- Prof. Kim, Sungoh
+## Course time
+- Thurs, 2pm (6,7,8)
+## Room number
+- 7-309
