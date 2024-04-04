@@ -1,0 +1,173 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>hinf_stability</title><meta name="generator" content="MATLAB 9.12"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2024-04-03"><meta name="DC.source" content="hinf_stability.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">State-space model</a></li><li><a href="#3">Initialize description of LMIs....</a></li><li><a href="#4">Specify matrix variables in LMIs...</a></li><li><a href="#5">Specify term content of LMIs...</a></li><li><a href="#6">Compute solution</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> [P, gm] = hinf_stability
+</pre><h2 id="2">State-space model</h2><pre class="codeinput">A = [-1, -2; 1, -4];
+N = [1; 0.1];
+G = [1, 0];
+n = size(A,1);
+gm = 0.64;
+</pre><h2 id="3">Initialize description of LMIs....</h2><pre class="codeinput">setlmis([]);
+</pre><h2 id="4">Specify matrix variables in LMIs...</h2><pre class="codeinput">vP = lmivar(1, [n,1]);    <span class="comment">% nxn, symmetric</span>
+</pre><h2 id="5">Specify term content of LMIs...</h2><p>LMI #1</p><pre class="codeinput">lmiterm( [-1, 1, 1, vP], 1, 1);
+
+<span class="comment">% LMI #2</span>
+lmiterm( [2, 1, 1,    vP], 1, A, <span class="string">'s'</span>);
+lmiterm( [2, 1, 1,     0], G'*G);
+
+lmiterm( [2, 1, 2,    vP], 1, N);
+
+lmiterm( [2, 2, 2,     0], -gm^2);
+</pre><h2 id="6">Compute solution</h2><pre class="codeinput">lmisys = getlmis;
+options = [0,0,0,0,0];
+target = 0;
+[tmin, xfeas] = feasp(lmisys, options, target);
+
+<span class="keyword">if</span> ~isempty(xfeas) &amp;&amp; tmin &lt; 0
+    disp(<span class="string">'This system is Hinf stable!!'</span>);
+    P = dec2mat(lmisys, xfeas, vP);
+<span class="keyword">else</span>
+    disp(<span class="string">'unstable!!'</span>);
+    P = NaN;
+    gm = NaN;
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">
+ Solver for LMI feasibility problems L(x) &lt; R(x)
+    This solver minimizes  t  subject to  L(x) &lt; R(x) + t*I
+    The best value of t should be negative for feasibility
+
+ Iteration   :    Best value of t so far 
+ 
+     1                        0.128890
+     2                        0.038622
+     3                        0.016295
+     4                        0.016295
+     5                    -1.372719e-03
+
+ Result:  best value of t: -1.372719e-03
+          f-radius saturation:  0.000% of R =  1.00e+09
+ 
+This system is Hinf stable!!
+
+ans =
+
+    1.0702   -1.1212
+   -1.1212    2.3874
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2022a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function [P, gm] = hinf_stability
+
+
+%% State-space model 
+A = [-1, -2; 1, -4];
+N = [1; 0.1];
+G = [1, 0];
+n = size(A,1);  
+gm = 0.64;
+
+%% Initialize description of LMIs....
+setlmis([]);
+
+%% Specify matrix variables in LMIs...
+vP = lmivar(1, [n,1]);    % nxn, symmetric
+
+%% Specify term content of LMIs...
+% LMI #1
+lmiterm( [-1, 1, 1, vP], 1, 1);
+
+% LMI #2
+lmiterm( [2, 1, 1,    vP], 1, A, 's');
+lmiterm( [2, 1, 1,     0], G'*G);
+
+lmiterm( [2, 1, 2,    vP], 1, N);
+
+lmiterm( [2, 2, 2,     0], -gm^2);
+
+%% Compute solution 
+lmisys = getlmis;
+options = [0,0,0,0,0];
+target = 0;
+[tmin, xfeas] = feasp(lmisys, options, target);
+
+if ~isempty(xfeas) && tmin < 0 
+    disp('This system is Hinf stable!!');
+    P = dec2mat(lmisys, xfeas, vP);
+else
+    disp('unstable!!');
+    P = NaN;
+    gm = NaN;
+end 
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
