@@ -19,9 +19,9 @@ n = size(A, 1);
 setlmis([]);
 
 % Specify matrix variables in LMIs...
-vP = lmivar(1, [n,1]);    % nxn, symmetric
-veps = lmivar(1, [1, 1]); % scalar variable
-vgm = lmivar(1, [1, 1]); % scalar variable
+vP = lmivar(1, [n,1]);      % nxn, symmetric
+veps = lmivar(1, [1, 1]);   % scalar variable
+vgm = lmivar(1, [1, 1]);    % scalar variable
 
 % Specify term content of LMIs...
 
@@ -29,14 +29,14 @@ vgm = lmivar(1, [1, 1]); % scalar variable
 lmiterm( [-1, 1, 1, vP], 1, 1); % 0 < P
 
 % LMI #2
-lmiterm( [2, 1, 1, vP], 1, A, 's');     % P*A + A'*P
-lmiterm( [2, 1, 1, 0], G'*G);           % G'*G
-lmiterm( [2, 1, 1, veps], H', H);       % eps*H'*H
-lmiterm( [2, 1, 2, vP], 1, N);          % P*N
-lmiterm( [2, 2, 2, vgm], -1, 1);        % -gamma^2*I
+lmiterm( [2, 1, 1, vP],     1, A, 's'); % P*A + A'*P
+lmiterm( [2, 1, 1, 0],      G'*G);      % G'*G
+lmiterm( [2, 1, 1, veps],   H', H);     % eps*H'*H
+lmiterm( [2, 1, 2, vP],     1, N);      % P*N
+lmiterm( [2, 2, 2, vgm],    -1, 1);     % -gamma^2*I
 %lmiterm( [2, 2, 2, 0], -gm^2);         % -gamma^2*I
-lmiterm( [2, 1, 3, vP], 1, E);          % P*E
-lmiterm( [2, 3, 3, veps], -1, 1);       % -eps*I
+lmiterm( [2, 1, 3, vP],     1, E);      % P*E
+lmiterm( [2, 3, 3, veps],   -1, 1);     % -eps*I
 
 % Compute solution
 lmisys = getlmis;
@@ -45,7 +45,7 @@ target = 0;
 [tmin, xfeas] = feasp(lmisys, options, target);
 
 if ~isempty(xfeas) && tmin < 0
-    disp('This system is robust stable!!');
+    disp('This system is Hinf stable!!');
     P = dec2mat(lmisys, xfeas, vP);
     eps = dec2mat(lmisys, xfeas, veps);
     gm = dec2mat(lmisys, xfeas, vgm);
