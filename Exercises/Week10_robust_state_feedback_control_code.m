@@ -1,5 +1,6 @@
 %function K = robust_state_feedback_control
-clc 
+
+clc, clearvars, close all
 
 % State-space model
 A = [1, -2; 1, 4];

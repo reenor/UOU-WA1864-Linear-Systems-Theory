@@ -1,19 +1,19 @@
-function estRes
+%function estRes
  
 % System matrices and initial condition
-A = [-1, -2; 1, -2];
-B = [1; 0.1];
-C = [1, 0]; 
+A = [0  -1; 1, 0];
+B = [0  0]';
+C = [0.5    0];
 
 n = size(A,1);
 m = size(B,2); 
 p = size(C,1);
 
-x0 = [0.1 ; -0.1];
- 
+% Initial condition
+x0 = [0.1 -0.1]';
 
-%observer gain
-L = [ 1.2266;     2.0277];
+% Observer gain
+L = [-1.8750   0.6250]'; % Example 1.1
 
 % Responds....
 kMax = 10000;
@@ -21,9 +21,9 @@ dt = 0.001;
 Id = eye(2);
 
 x(:,1) = x0;
-hx(:,1) = [0; 0];
+hx(:,1) = [0; 0]; % The estimated value of x0
 
-for k=1:kMax  
+for k=1:kMax
     u(:, k) = rand(1);
     y(:, k) = C*x(:,k);
     x(:, k+1) = (Id + A*dt)*x(:, k) + B*dt*u(:,k);

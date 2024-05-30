@@ -3,6 +3,8 @@
 
 %function [K] = state_feedback_control()
 
+clc, clearvars, close all
+
 % Define state-space model
 A = [1  -2; 1   4];
 B = [1  0.1]'; % Transpose

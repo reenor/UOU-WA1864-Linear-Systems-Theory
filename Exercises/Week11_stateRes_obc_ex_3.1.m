@@ -1,25 +1,22 @@
-function stateRes_obc
- 
-% System matrices and initial condition
-A = [1, -2; 1, 4];
-B = [1; 0.1];
-C = [0.1, 0]; 
+%function stateRes_obc
 
+%clc, clearvars, close all
+
+% System matrices and initial condition
+A = [1  -2; 1   4];
+B = [1  0.1]';
+C = [0.1    0];
+
+% Initial condition
 x0 = [1; -1];
  
+% Observer-based control design
+%(1) via separation principle
+% K = [-7.4147  -108.0534];
+% L = [-80.9385 291.6843]';
 
-%LQR control gain 
-%(1) separation principle
-% K = [-7.4147 -108.0534];
-% L = [-80.9385  291.6843 ]';
-
-%(2) Lyapunov stability approach
-%mu = 10
-% K =  [-7.7328  -52.7313];
-% L =  [-83.2030  301.7209]';
-
-%mu = 100
-K = [-48.5911 -280.6373];
+%(2) via Lyapunov stability approach with mu = 100
+K = [-48.5911   -280.6373];
 L = [-89.3317   330.6961]';
 
 % Responds....
@@ -40,8 +37,9 @@ for k=1:kMax
 end  
 
 %
-figure 
+figure
 title('(a)')
+hold on
 plot(x(1,:), x(2,:), 'k', 'linewidth', 1.5) 
 xlabel('x_1')
 ylabel('x_2')
