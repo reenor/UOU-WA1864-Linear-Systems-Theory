@@ -19,7 +19,7 @@ m = size(B, 2);
 
 %Q = 10000000000*eye(n); % Lead to NOT feasible
 
-Q = 1*eye(n);
+Q = 100*eye(n);
 R = 10;
 
 % Initialize description of LMIs
@@ -55,6 +55,7 @@ if ~isempty(xfeas) && tmin < 0
     bK = dec2mat(lmisys, xfeas, vbK);
     P  = inv(bP);
     K  = bK * inv(bP);
+    disp('P = ');disp(P);
     disp('K = ');disp(K);
 else
     disp('It is NOT feasible!!');

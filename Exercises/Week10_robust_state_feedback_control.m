@@ -1,7 +1,7 @@
-function K = robust_state_feedback_control
+%function K = robust_state_feedback_control
 clc 
 
-%% State-space model
+% State-space model
 A = [1, -2; 1, 4];
 B = [1; 0.1];
 
@@ -10,18 +10,18 @@ H1 = [0.1, 0];
 H2 = 0.3;
 
 n = size(A,1);
-m = size(B,2); 
+m = size(B,2);
 
 
-%% Initialize description of LMIs
+% Initialize description of LMIs
 setlmis([]); 
 
-%% Specify matrix variables in LMIs
+% Specify matrix variables in LMIs
 vbP = lmivar(1, [n,1]);
 vbK = lmivar(2, [m,n]);
 veps = lmivar(1, [1,1]);
 
-%% Specify term content of LMIs
+% Specify term content of LMIs
 
 % LMI #1
 nlmi = 1;
@@ -42,7 +42,7 @@ lmiterm( [nlmi, 2, 1,   vbK], H2, 1);
 
 lmiterm( [nlmi, 2, 2,  veps], -1, 1);
 
-%% Compute solution 
+% Compute solution 
 lmisys = getlmis;
 options = [0,0,0,0,0];
 target = 0;
@@ -54,6 +54,7 @@ if ~isempty(xfeas) && tmin < 0
     bK = dec2mat(lmisys, xfeas, vbK);    
     P  = inv(bP);    
     K  = bK * inv(bP);     
+    disp('K = ');disp(K);
 else
     disp('It is infeasible!!'); 
     K = NaN;

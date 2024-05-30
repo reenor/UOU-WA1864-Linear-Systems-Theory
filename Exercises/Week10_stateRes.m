@@ -1,4 +1,4 @@
-function stateRes
+%function stateRes
  
 % System matrices and initial condition
 A = [1, -2; 1, 4];

@@ -37,6 +37,7 @@ if ~isempty(xfeas) && tmin < 0
     bK = dec2mat(lmisys, xfeas, vbK);
     P  = inv(bP);
     K  = bK * inv(bP);
+    disp('P = ');disp(P);
     disp('K = ');disp(K);
 else
     disp('It is NOT feasible!!');
